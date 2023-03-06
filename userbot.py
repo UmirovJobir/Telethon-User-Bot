@@ -1,52 +1,44 @@
 from telethon import events
-import os
-from html_telegraph_poster.upload_images import upload_image
+
+from types import NoneType
+import logging
+
 import handlers.client
+import handlers.greeting
+import handlers.alive
+import handlers.telegraph
+import handlers.aboutme
+import handlers.quto
+import handlers.album
+import handlers.message
 
-client = handlers.client.client
-
-@client.on(events.NewMessage(outgoing=True, pattern=r'\.hi'))
-async def greeting(event):
-    chat = await event.get_chat()
-    # await client.send_message(chat, "Hello!!!")       #To send message in the chat
-    await event.reply("Hello How are you!")  # To reply
-
-
-@client.on(events.NewMessage(outgoing=True, pattern=r'\.me'))
-async def aboutme(event):
-    chat = await event.get_chat()
-    await client.edit_message(event.message, "Hello edited!")  # To edit message
+# logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
+#                     level=logging.INFO)
 
 
-@client.on(events.NewMessage(outgoing=True, pattern=r'\.alive'))
-async def aliveHandler(event):
-    chat = await event.get_chat()
-    # await client.send_message(chat, "Yes Your bot is running")
-    photo = await client.get_profile_photos('me')
-    me = await client.get_me()
-    try:
-        await client.send_file(chat, file=photo,
-                               caption=
-                               "I am Alive.\n\n"
-                               "Owner [Jobir](https://t.me/{})\n"
-                               "Channel [Mohirdev kanal](https://t.me/{})\n".format(me.username, 'jobirtestchannel')
-                               )
-    except TypeError:
-        await client.send_message(chat, "You don't have photo")
 
+client = handlers.client.clientHandler
 
-@client.on(events.NewMessage(outgoing=True, pattern=r'\.tu'))
-async def telegraphUploadHandler(event):
-    chat = await event.get_chat()
-    text = await client.edit_message(event.message, "Processing.....")
-    replied = await event.get_reply_message()
-    try:
-        image = await replied.download_media()
-        url = upload_image(image)
-    except:
-        return await client.edit_message(event.message, "Reply to an Image")
-    await client.send_message(chat, url, link_preview=True)
-    await client.delete_messages(chat, text)
+with client as dracula:
+    dracula.add_event_handler(handlers.greeting.greetingHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.alive.aliveHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.telegraph.telegraphUploadHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.aboutme.aboutmeHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.quto.qutoHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.album.albumHandler)
+
+with client as dracula:
+    dracula.add_event_handler(handlers.message.messages_hand)
 
 
 client.start()
