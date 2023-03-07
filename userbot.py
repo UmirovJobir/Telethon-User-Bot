@@ -16,7 +16,6 @@ import handlers.message
 #                     level=logging.INFO)
 
 
-
 client = handlers.client.clientHandler
 
 with client as dracula:
@@ -34,8 +33,8 @@ with client as dracula:
 with client as dracula:
     dracula.add_event_handler(handlers.quto.qutoHandler)
 
-with client as dracula:
-    dracula.add_event_handler(handlers.album.albumHandler)
+# with client as dracula:
+#     dracula.add_event_handler(handlers.album.albumHandler)
 
 with client as dracula:
     dracula.add_event_handler(handlers.message.messages_hand)

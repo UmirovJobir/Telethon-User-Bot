@@ -13,15 +13,13 @@ client = handlers.client.clientHandler
 @events.register(events.NewMessage(incoming=True))
 async def messages_hand(event):
     if event.is_private:
-        user = await client.get_entity(event.peer_id)
-        first = user.first_name
-        last = user.last_name if not "None" else ""
-        await client.send_message(-1001672689337, f"Сообщение с пользователя {first} {last}")
-        # if await event.media:
-        #     await client.send
-        await event.forward_to(-1001672689337)
-        print('it\'s  a user')
-        raise events.StopPropagation
+        pass
+        # user = await client.get_entity(event.peer_id)
+        # first = user.first_name
+        # last = user.last_name if not "None" else ""
+        # await event.forward_to(1578600046)
+        # print('it\'s  a user')
+        # raise events.StopPropagation
     else:
         if event.message.grouped_id == None:
             # Xabar yuborilgan guruh va foydalanuvchini yoki kanalni aniqlash
@@ -39,6 +37,7 @@ async def messages_hand(event):
                         raise Exception
                     link = user.phone
                     link2 = f"<a href=https://t.me/+{user.phone}>{fullname}</a>"
+
                 except:
                     try:
                         if type(user.username) == NoneType:
@@ -74,7 +73,7 @@ async def messages_hand(event):
                     else:
                         print("Matn lotinchada")
                         ctgrs = get_categories(response_uz, event.message.text)
-
+                print(ctgrs)
                 # data = f"""'user_id' :^ {user.id}, \n'user_name' :^ {fullname}, \n'user_link' :^ {link},
                 # \n'group_id' :^ {group.id}, \n'group_name' :^ {group.title}, \n'group_link' :^ {group_link},
                 # \n'message_id' :^ {event.message.id}, \n'message_text' :^ {event.message.text}"""
@@ -82,10 +81,10 @@ async def messages_hand(event):
                 data = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter)"""
                 data += f"""{group.id}(delimeter){group.title}(delimeter){group_link}(delimeter)"""
                 data += f"""{event.message.id}(delimeter){event.message.text}"""
-                if ctgrs != "":
 
+                if ctgrs != "":
                     if not channel:
-                        await client.send_message(-1001672689337,
+                        await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylandi\n"
                                                   f"User: {link2}\n"
                                                   f"Group: {group_link2}\n"
@@ -96,7 +95,7 @@ async def messages_hand(event):
                                                   parse_mode="Html",
                                                   link_preview=False)
                     else:
-                        await client.send_message(-1001672689337,
+                        await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylandi\n"
                                                   f"Channel: {group_link2}\n"
                                                   f"Catalogs: {ctgrs}\n"
@@ -108,7 +107,7 @@ async def messages_hand(event):
 
                 else:
                     if not channel:
-                        await client.send_message(-1001672689337,
+                        await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylanmadi\n"
                                                   f"User {link2}\n"
                                                   f"Group {group_link2}\n"
@@ -118,7 +117,7 @@ async def messages_hand(event):
                                                   parse_mode="Html",
                                                   link_preview=False)
                     else:
-                        await client.send_message(-1001672689337,
+                        await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylanmadi\n"
                                                   f"Сообщение от канала {group_link2}\n"
                                                   f"Message:{event.message.text}\n"
