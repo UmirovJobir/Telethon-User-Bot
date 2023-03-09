@@ -10,7 +10,7 @@ import handlers.client
 client = handlers.client.clientHandler
 
 
-@events.register(events.NewMessage(incoming=True))
+@events.register(events.NewMessage(incoming=True, chats=-1001763109051))
 async def messages_hand(event):
     if event.is_private:
         pass

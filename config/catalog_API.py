@@ -15,10 +15,8 @@ def get_categories(response, txtmsg):
     if response.status_code == 200:
         data = dict(json.loads(response.content))
         a = data['data']
-        pprint(a)
         categories = dict()
         for i in a:
-
             for j in i['child_categories']:
                 cat_id = j['id']
                 categories[cat_id] = list()
@@ -31,9 +29,9 @@ def get_categories(response, txtmsg):
                 str1 = txtmsg.lower().split()
                 str2 = list(j.values())[0].lower()
 
-                a = difflib.get_close_matches(str2, str1, 3, 0.8)
+                a = difflib.get_close_matches(str2, str1, 3, 0.6)
                 for i in a:
-                    categories2.add(f"{key}:{list(j.keys())[0]}")
+                    categories2.add(f"{key}:{list(j.values())[0]}")
         return " ".join(categories2)
     else:
         # Handle the error if the response status code is not 200 (OK)
