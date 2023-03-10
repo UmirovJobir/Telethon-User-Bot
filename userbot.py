@@ -8,7 +8,7 @@ import handlers.greeting
 import handlers.alive
 import handlers.telegraph
 import handlers.aboutme
-import handlers.quto
+import handlers.qu
 import handlers.album
 import handlers.message
 
@@ -31,10 +31,10 @@ with client as dracula:
     dracula.add_event_handler(handlers.aboutme.aboutmeHandler)
 
 with client as dracula:
-    dracula.add_event_handler(handlers.quto.qutoHandler)
+    dracula.add_event_handler(handlers.qu.qutoHandler)
 
-# with client as dracula:
-#     dracula.add_event_handler(handlers.album.albumHandler)
+with client as dracula:
+    dracula.add_event_handler(handlers.album.albumHandler)
 
 with client as dracula:
     dracula.add_event_handler(handlers.message.messages_hand)

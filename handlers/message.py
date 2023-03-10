@@ -5,6 +5,7 @@ from config.catalog_API import (
     response_ru, response_uz, response_cyrl,
     get_categories
 )
+from pprint import pprint
 import handlers.client
 
 client = handlers.client.clientHandler
@@ -80,7 +81,7 @@ async def messages_hand(event):
 
                 data = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter)"""
                 data += f"""{group.id}(delimeter){group.title}(delimeter){group_link}(delimeter)"""
-                data += f"""{event.message.id}(delimeter){event.message.text}"""
+                data += f"""{event.message.id}(delimeter){event.message.text}(delimeter){ctgrs}"""
 
                 if ctgrs != "":
                     if not channel:
@@ -126,7 +127,11 @@ async def messages_hand(event):
                                                   parse_mode="Html",
                                                   link_preview=False)
 
-                await client.send_message("@demo_test_mohirdev_bot", data, file=event.message.media,
-                                          parse_mode="Html", link_preview=False)
+                await client.send_message(
+                    "@demo_test_mohirdev_bot", 
+                    data, 
+                    file=event.message.media,
+                    parse_mode="Html", link_preview=False
+                    )
 
         raise events.StopPropagation

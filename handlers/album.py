@@ -1,16 +1,22 @@
 from telethon import events
 from types import NoneType
+from config.language import detect_cyrillic_language, get_language
+from config.catalog_API import (
+    response_ru, response_uz, response_cyrl,
+    get_categories
+)
 import handlers.client
 
 client = handlers.client.clientHandler
 
 
-@events.register(events.Album())
+@events.register(events.Album(chats=-1001763109051))
 async def albumHandler(event):
     # Xabar yuborilgan guruh va foydalanuvchini yoki kanalni aniqlash
     # print(event)
 
     group = await event.original_update.message.get_chat()
+    # print(event.messages)
     try:
         user = await event.original_update.message.get_sender()
         channel = False
@@ -46,11 +52,79 @@ async def albumHandler(event):
     # Xabarni filtrlash boshlandi
     # print(event.text)
     # print(event.raw_text)
-    data = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter){group.id}(delimeter){group.title}(delimeter){group_link}(delimeter){event.messages[0].id}(delimeter){event.text}"""
+    
+    if get_language(event.text):
+        ctgrs = get_categories(response_ru, event.text)
+    else:
+        if detect_cyrillic_language(event.text):
+            print("Текст на кириллице")
+            ctgrs = get_categories(response_cyrl, event.text)
+
+        else:
+            print("Matn lotinchada")
+            ctgrs = get_categories(response_uz, event.text)
+
+    print(ctgrs)
+
+    data  = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter)"""
+    data += f"""{group.id}(delimeter){group.title}(delimeter){group_link}(delimeter)"""
+    data += f"""{event.messages[0].id}(delimeter){event.text}"""
 
     await client.send_message(
-        "@demo_test_mohirdev_bot",  # output
-        message=data,  # caption
-        file=event.messages,  # list of messages
+        "@demo_test_mohirdev_bot", #output 
+        message=data, #caption
+        file=event.messages, #list of messages
     )
+
+    # await client.send_message(
+    #     -1001578600046,
+    #     file=event.messages, # event.messages is a List - meaning we're sending an album
+    #     message=event.original_update.message.message,  # get the caption message from the album
+    # )
+
+    if ctgrs != "":
+        if not channel:
+            await client.send_message(-1001578600046,
+                                        f"Statusi: Bazaga #joylandi\n"
+                                        f"User: {link2}\n"
+                                        f"Group: {group_link2}\n"
+                                        f"Catalogs: {ctgrs}\n"
+                                        f"Message: {event.message.text}\n"
+                                        f"message_link: https://t.me/{group_link}/{event.id}",
+                                        file=event.message.media,
+                                        parse_mode="Html",
+                                        link_preview=False)
+        else:
+            await client.send_message(-1001578600046,
+                                        f"Statusi: Bazaga #joylandi\n"
+                                        f"Channel: {group_link2}\n"
+                                        f"Catalogs: {ctgrs}\n"
+                                        f"Message: {event.message.text}\n"
+                                        f"message_link: https://t.me/{group_link}/{event.id}",
+                                        file=event.message.media,
+                                        parse_mode="Html",
+                                        link_preview=False)
+
+    else:
+        if not channel:
+            await client.send_message(-1001578600046,
+                                        f"Statusi: Bazaga #joylanmadi\n"
+                                        f"User {link2}\n"
+                                        f"Group {group_link2}\n"
+                                        f"message: {event.message.text}\n"
+                                        f"message_link: https://t.me/{group_link}/{event.id}",
+                                        file=event.message.media,
+                                        parse_mode="Html",
+                                        link_preview=False)
+        else:
+            await client.send_message(-1001578600046,
+                                        f"Statusi: Bazaga #joylanmadi\n"
+                                        f"Сообщение от канала {group_link2}\n"
+                                        f"Message:{event.message.text}\n"
+                                        f"message_link: https://t.me/{group_link}/{event.id}",
+                                        file=event.message.media,
+                                        parse_mode="Html",
+                                        link_preview=False)
+
+
     raise events.StopPropagation
