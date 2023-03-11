@@ -7,6 +7,7 @@ from config.catalog_API import (
 )
 from pprint import pprint
 import handlers.client
+import json
 
 client = handlers.client.clientHandler
 
@@ -76,16 +77,18 @@ async def messages_hand(event):
                         ctgrs = get_categories(response_uz, event.message.text)
                 
                 data = dict()
-                data['user_id']=user.id
-                data['fullname']=fullname
-                data['group_id']=group.id
-                data['group.title']=group.title
-                data['group_link']=f'https://t.me/{group.username}'
-                data['message_id']=event.message.id
-                data['message_text']=event.message.text
-                data['message_link']=f'https://t.me/{group_link}/{event.message.id}'
-                data['catalog_options']=ctgrs
-
+                data["user_id"]=user.id
+                data["fullname"]=fullname
+                data["group_id"]=group.id
+                data["group_title"]=group.title
+                data["group_link"]=f'https://t.me/{group.username}'
+                data["message_id"]=event.message.id
+                data["message_text"]=event.message.text
+                data["message_link"]=f'https://t.me/{group_link}/{event.message.id}'
+                data["catalog_options"]=ctgrs
+                data = json.dumps(data, indent = 4)
+                
+                # print(ctgrs)
                 if ctgrs != "":
                     if not channel:
                         await client.send_message(-1001578600046,
@@ -132,9 +135,8 @@ async def messages_hand(event):
 
                 await client.send_message(
                     "@demo_test_mohirdev_bot", 
-                    f'{data}', 
+                    f"{data}",
                     file=event.message.media,
                     parse_mode="Html", link_preview=False
                     )
-
         raise events.StopPropagation

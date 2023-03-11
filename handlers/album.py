@@ -5,6 +5,7 @@ from config.catalog_API import (
     response_ru, response_uz, response_cyrl,
     get_categories
 )
+import json
 import handlers.client
 
 client = handlers.client.clientHandler
@@ -65,15 +66,16 @@ async def albumHandler(event):
             ctgrs = get_categories(response_uz, event.text)
 
     data = dict()
-    data['user_id']=user.id
-    data['fullname']=fullname
-    data['group_id']=group.id
-    data['group_title']=group.title
-    data['group_link']=f'https://t.me/{group.username}'
-    data['message_id']=event.original_update.message.id
-    data['message_text']=event.text
-    data['message_link']=f'https://t.me/{group_link}/{event.original_update.message.id}'
-    data['catalog_options']=ctgrs
+    data["user_id"]=user.id
+    data["fullname"]=fullname
+    data["group_id"]=group.id
+    data["group_title"]=group.title
+    data["group_link"]=f'https://t.me/{group.username}'
+    data["message_id"]=event.original_update.message.id
+    data["message_text"]=event.text
+    data["message_link"]=f'https://t.me/{group_link}/{event.original_update.message.id}'
+    data["catalog_options"]=ctgrs
+    data = json.dumps(data, indent = 4)
 
     if ctgrs != "":
         if not channel:
@@ -121,8 +123,8 @@ async def albumHandler(event):
 
     
     await client.send_message(
-        "@demo_test_mohirdev_bot", #output 
-        message=f'{data}', #caption
+        "@Tanlappbot", #output 
+        message=f"{data}", #caption
         file=event.messages, #list of messages
     )
 
