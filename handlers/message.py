@@ -74,14 +74,17 @@ async def messages_hand(event):
                     else:
                         print("Matn lotinchada")
                         ctgrs = get_categories(response_uz, event.message.text)
-                print(ctgrs)
-                # data = f"""'user_id' :^ {user.id}, \n'user_name' :^ {fullname}, \n'user_link' :^ {link},
-                # \n'group_id' :^ {group.id}, \n'group_name' :^ {group.title}, \n'group_link' :^ {group_link},
-                # \n'message_id' :^ {event.message.id}, \n'message_text' :^ {event.message.text}"""
-
-                data = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter)"""
-                data += f"""{group.id}(delimeter){group.title}(delimeter){group_link}(delimeter)"""
-                data += f"""{event.message.id}(delimeter){event.message.text}(delimeter){ctgrs}"""
+                
+                data = dict()
+                data['user_id']=user.id
+                data['fullname']=fullname
+                data['group_id']=group.id
+                data['group.title']=group.title
+                data['group_link']=f'https://t.me/{group.username}'
+                data['message_id']=event.message.id
+                data['message_text']=event.message.text
+                data['message_link']=f'https://t.me/{group_link}/{event.message.id}'
+                data['catalog_options']=ctgrs
 
                 if ctgrs != "":
                     if not channel:
@@ -89,8 +92,8 @@ async def messages_hand(event):
                                                   f"Statusi: Bazaga #joylandi\n"
                                                   f"User: {link2}\n"
                                                   f"Group: {group_link2}\n"
-                                                  f"Catalogs: {ctgrs}\n"
-                                                  f"Message: {event.message.text}\n"
+                                                  f"Catalogs:\n <code>{ctgrs}</code>\n"
+                                                  f"Message: <i>{event.message.text}</i>\n"
                                                   f"message_link: https://t.me/{group_link}/{event.message.id}",
                                                   file=event.message.media,
                                                   parse_mode="Html",
@@ -99,8 +102,8 @@ async def messages_hand(event):
                         await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylandi\n"
                                                   f"Channel: {group_link2}\n"
-                                                  f"Catalogs: {ctgrs}\n"
-                                                  f"Message: {event.message.text}\n"
+                                                  f"Catalogs:\n <code>{ctgrs}</code>\n"
+                                                  f"Message: <i>{event.message.text}</i>\n"
                                                   f"message_link: https://t.me/{group_link}/{event.message.id}",
                                                   file=event.message.media,
                                                   parse_mode="Html",
@@ -112,7 +115,7 @@ async def messages_hand(event):
                                                   f"Statusi: Bazaga #joylanmadi\n"
                                                   f"User {link2}\n"
                                                   f"Group {group_link2}\n"
-                                                  f"message: {event.message.text}\n"
+                                                  f"Message: <i>{event.message.text}</i>\n"
                                                   f"message_link: https://t.me/{group_link}/{event.message.id}",
                                                   file=event.message.media,
                                                   parse_mode="Html",
@@ -121,7 +124,7 @@ async def messages_hand(event):
                         await client.send_message(-1001578600046,
                                                   f"Statusi: Bazaga #joylanmadi\n"
                                                   f"Сообщение от канала {group_link2}\n"
-                                                  f"Message:{event.message.text}\n"
+                                                  f"Message: <i>{event.message.text}</i>\n"
                                                   f"message_link: https://t.me/{group_link}/{event.message.id}",
                                                   file=event.message.media,
                                                   parse_mode="Html",
@@ -129,7 +132,7 @@ async def messages_hand(event):
 
                 await client.send_message(
                     "@demo_test_mohirdev_bot", 
-                    data, 
+                    f'{data}', 
                     file=event.message.media,
                     parse_mode="Html", link_preview=False
                     )

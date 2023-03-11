@@ -16,7 +16,7 @@ async def albumHandler(event):
     # print(event)
 
     group = await event.original_update.message.get_chat()
-    # print(event.messages)
+    print(event.original_update.message.id)
     try:
         user = await event.original_update.message.get_sender()
         channel = False
@@ -64,23 +64,16 @@ async def albumHandler(event):
             print("Matn lotinchada")
             ctgrs = get_categories(response_uz, event.text)
 
-    print(ctgrs)
-
-    data  = f"""{user.id}(delimeter){fullname}(delimeter){link}(delimeter)"""
-    data += f"""{group.id}(delimeter){group.title}(delimeter){group_link}(delimeter)"""
-    data += f"""{event.messages[0].id}(delimeter){event.text}"""
-
-    await client.send_message(
-        "@demo_test_mohirdev_bot", #output 
-        message=data, #caption
-        file=event.messages, #list of messages
-    )
-
-    # await client.send_message(
-    #     -1001578600046,
-    #     file=event.messages, # event.messages is a List - meaning we're sending an album
-    #     message=event.original_update.message.message,  # get the caption message from the album
-    # )
+    data = dict()
+    data['user_id']=user.id
+    data['fullname']=fullname
+    data['group_id']=group.id
+    data['group_title']=group.title
+    data['group_link']=f'https://t.me/{group.username}'
+    data['message_id']=event.original_update.message.id
+    data['message_text']=event.text
+    data['message_link']=f'https://t.me/{group_link}/{event.original_update.message.id}'
+    data['catalog_options']=ctgrs
 
     if ctgrs != "":
         if not channel:
@@ -88,20 +81,20 @@ async def albumHandler(event):
                                         f"Statusi: Bazaga #joylandi\n"
                                         f"User: {link2}\n"
                                         f"Group: {group_link2}\n"
-                                        f"Catalogs: {ctgrs}\n"
-                                        f"Message: {event.message.text}\n"
-                                        f"message_link: https://t.me/{group_link}/{event.id}",
-                                        file=event.message.media,
+                                        f"Catalogs:\n <code>{ctgrs}</code>\n"
+                                        f"Message: <i>{event.text}</i>\n"
+                                        f"message_link: https://t.me/{group_link}/{event.original_update.message.id}",
+                                        file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
         else:
             await client.send_message(-1001578600046,
                                         f"Statusi: Bazaga #joylandi\n"
                                         f"Channel: {group_link2}\n"
-                                        f"Catalogs: {ctgrs}\n"
-                                        f"Message: {event.message.text}\n"
-                                        f"message_link: https://t.me/{group_link}/{event.id}",
-                                        file=event.message.media,
+                                        f"Catalogs:\n <code>{ctgrs}</code>\n"
+                                        f"Message: <i>{event.text}</i>\n"
+                                        f"message_link: https://t.me/{group_link}/{event.original_update.message.id}",
+                                        file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
 
@@ -111,20 +104,26 @@ async def albumHandler(event):
                                         f"Statusi: Bazaga #joylanmadi\n"
                                         f"User {link2}\n"
                                         f"Group {group_link2}\n"
-                                        f"message: {event.message.text}\n"
-                                        f"message_link: https://t.me/{group_link}/{event.id}",
-                                        file=event.message.media,
+                                        f"Message: <i>{event.text}</i>\n"
+                                        f"message_link: https://t.me/{group_link}/{event.original_update.message.id}",
+                                        file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
         else:
             await client.send_message(-1001578600046,
                                         f"Statusi: Bazaga #joylanmadi\n"
                                         f"Сообщение от канала {group_link2}\n"
-                                        f"Message:{event.message.text}\n"
-                                        f"message_link: https://t.me/{group_link}/{event.id}",
-                                        file=event.message.media,
+                                        f"Message: <i>{event.text}</i>\n"
+                                        f"message_link: https://t.me/{group_link}/{event.original_update.message.id}",
+                                        file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
 
+    
+    await client.send_message(
+        "@demo_test_mohirdev_bot", #output 
+        message=f'{data}', #caption
+        file=event.messages, #list of messages
+    )
 
     raise events.StopPropagation
