@@ -66,14 +66,17 @@ async def messages_hand(event):
             # Xabarni filtrlash boshlandi
             if event.message.text and len(event.message.text.split()) > 3 and not is_bot:
                 if get_language(event.message.text):
+                    lan = 'ru'
                     ctgrs = get_categories(response_ru, event.message.text)
                 else:
                     if detect_cyrillic_language(event.message.text):
                         print("Текст на кириллице")
+                        lan = 'uz_cyrl'
                         ctgrs = get_categories(response_cyrl, event.message.text)
 
                     else:
                         print("Matn lotinchada")
+                        lan = 'uz_latn'
                         ctgrs = get_categories(response_uz, event.message.text)
                 
                 data = dict()
@@ -86,6 +89,7 @@ async def messages_hand(event):
                 data["message_text"]=event.message.text
                 data["message_link"]=f'https://t.me/{group_link}/{event.message.id}'
                 data["catalog_options"]=ctgrs
+                data["lan"] = lan
                 data = json.dumps(data, indent = 4)
                 
                 # print(ctgrs)

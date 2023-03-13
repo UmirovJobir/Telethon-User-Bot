@@ -75,7 +75,7 @@ async def albumHandler(event):
     data["message_text"]=event.text
     data["message_link"]=f'https://t.me/{group_link}/{event.original_update.message.id}'
     data["catalog_options"]=ctgrs
-    data = json.dumps(data, indent = 4)
+    data = json.dumps(data)
 
     if ctgrs != "":
         if not channel:
@@ -120,10 +120,10 @@ async def albumHandler(event):
                                         file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
+            
 
-    
     await client.send_message(
-        "@Tanlappbot", #output 
+        "@demo_test_mohirdev_bot", #output 
         message=f"{data}", #caption
         file=event.messages, #list of messages
     )
