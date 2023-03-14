@@ -1,5 +1,6 @@
 from telethon import events
 from types import NoneType
+from aiogram.utils.deep_linking import decode_payload
 from config.language import detect_cyrillic_language, get_language
 from config.catalog_API import (
     response_ru, response_uz, response_cyrl,
@@ -55,14 +56,17 @@ async def albumHandler(event):
     # print(event.raw_text)
     
     if get_language(event.text):
+        lan = 'ru'
         ctgrs = get_categories(response_ru, event.text)
     else:
         if detect_cyrillic_language(event.text):
             print("Текст на кириллице")
+            lan = 'uz_cyrl'
             ctgrs = get_categories(response_cyrl, event.text)
 
         else:
             print("Matn lotinchada")
+            lan = 'uz_latn'
             ctgrs = get_categories(response_uz, event.text)
 
     data = dict()
@@ -75,8 +79,10 @@ async def albumHandler(event):
     data["message_text"]=event.text
     data["message_link"]=f'https://t.me/{group_link}/{event.original_update.message.id}'
     data["catalog_options"]=ctgrs
+    data["lan"] = lan
     data = json.dumps(data)
 
+    # print(ctgrs)
     if ctgrs != "":
         if not channel:
             await client.send_message(-1001578600046,
@@ -120,10 +126,15 @@ async def albumHandler(event):
                                         file=event.messages,
                                         parse_mode="Html",
                                         link_preview=False)
-            
+    await client.send_message(
+        # "@demo_test_mohirdev_bot",
+        "@Tanlappbot",  #output 
+        message=f"{data}", #caption
+        file=event.messages, #list of messages
+    )
 
     await client.send_message(
-        "@demo_test_mohirdev_bot", #output 
+        "@demo_test_mohirdev_bot",
         message=f"{data}", #caption
         file=event.messages, #list of messages
     )

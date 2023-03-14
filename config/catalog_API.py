@@ -51,6 +51,8 @@ def get_categories(response, message):
         for i in list_categories:
             elements = i.split(":")
             json_categories[elements[0]]=elements[1]
+        
+        print(json_categories)
         return json_categories
     else:
         # Handle the error if the response status code is not 200 (OK)

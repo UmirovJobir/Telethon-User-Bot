@@ -12,7 +12,7 @@ import json
 client = handlers.client.clientHandler
 
 
-@events.register(events.NewMessage(incoming=True, chats=-1001763109051))
+@events.register(events.NewMessage(incoming=True)) #, chats=-1001763109051))
 async def messages_hand(event):
     if event.is_private:
         pass
@@ -138,7 +138,8 @@ async def messages_hand(event):
                                                   link_preview=False)
 
                 await client.send_message(
-                    "@demo_test_mohirdev_bot", 
+                    # "@demo_test_mohirdev_bot", 
+                    "Tanlappbot",
                     f"{data}",
                     file=event.message.media,
                     parse_mode="Html", link_preview=False
